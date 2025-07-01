@@ -37,8 +37,11 @@ build_tests: all
 check: build_tests check_markdown
 
 check_markdown: commonmark-spec
+	ls -l commonmark-spec/spec.txt
+	cd commonmark-spec; tr -d '\r' < spec.txt > spec.txt_; mv -v spec.txt_ spec.txt
+	ls -l commonmark-spec/spec.txt
 	cd commonmark-spec; python3 test/spec_tests.py --program ../.objs/static/tests/commonmark_tests |\
-	  grep -E "^Example|^[0-9]+.passed" |\
+	  tee ../aaa.txt | grep -E "^Example|^[0-9]+.passed" |\
 	  tee markdown_tests_result | tail
 	diff -u testsuite/commonmark/xfails.txt commonmark-spec/markdown_tests_result
 	python3 commonmark-spec/test/spec_tests.py --program .objs/static/tests/gnatdoc_tests \
